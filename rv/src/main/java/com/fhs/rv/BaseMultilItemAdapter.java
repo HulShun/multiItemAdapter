@@ -165,8 +165,8 @@ public abstract class BaseMultilItemAdapter<T> {
     }
 
 
-    public static final int MATCH = 1;
-    public static final int WARP = 0;
+    public static final int MATCH = -1;
+    public static final int WARP = -2;
 
     /**
      * 宫格列表的时候占位

@@ -85,7 +85,15 @@ public class RecyclerViewAdapterFactory {
                                     return 1;
                                 }
                                 int type = pair.getItemMatchType();
-                                return type == BaseMultilItemAdapter.MATCH ? manager.getSpanCount() : 1;
+                                int count;
+                                if (type == BaseMultilItemAdapter.MATCH || type > manager.getSpanCount()) {
+                                    count = manager.getSpanCount();
+                                } else if (type <= BaseMultilItemAdapter.WARP) {
+                                    count = 1;
+                                } else {
+                                    count = type;
+                                }
+                                return count;
                             }
                             return 1;
                         }
