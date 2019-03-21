@@ -14,6 +14,7 @@ import java.util.List;
 public class BaseLayoutAdapter extends RecyclerView.Adapter<BaseLayoutAdapter.ViewHolder> {
 
     private List<BaseMultilItemAdapter> mSubAdapters = new ArrayList<>();
+    private BaseFooterAdapter mFooterAdapter;
 
     @NonNull
     @Override
@@ -25,7 +26,7 @@ public class BaseLayoutAdapter extends RecyclerView.Adapter<BaseLayoutAdapter.Vi
                 break;
             }
         }
-        return resultItem.onCreateViewHolder(viewGroup, viewType);
+        return resultItem.onCreateViewHolder(viewGroup);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class BaseLayoutAdapter extends RecyclerView.Adapter<BaseLayoutAdapter.Vi
         return result;
     }
 
-    public void setMuliItems(List<BaseMultilItemAdapter> items) {
+    public void setMultiItems(List<BaseMultilItemAdapter> items) {
         int count = 0;
         mSubAdapters.clear();
         if (observer != null) {
@@ -83,6 +84,9 @@ public class BaseLayoutAdapter extends RecyclerView.Adapter<BaseLayoutAdapter.Vi
             adapter.setStartPosition(count);
             count += adapter.getItemCount();
             mSubAdapters.add(adapter);
+            if (adapter instanceof BaseFooterAdapter) {
+                mFooterAdapter = (BaseFooterAdapter) adapter;
+            }
         }
         notifyDataSetChanged();
     }
@@ -123,6 +127,14 @@ public class BaseLayoutAdapter extends RecyclerView.Adapter<BaseLayoutAdapter.Vi
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         holder.mAdapter.onViewDetachedFromWindow(holder);
+    }
+
+
+    public void notifyFooterStateChanged(String message, int state) {
+        if (mFooterAdapter != null) {
+            mFooterAdapter.setMessage(message, state);
+            mFooterAdapter.notifyItemChanged(0);
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

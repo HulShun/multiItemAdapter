@@ -24,12 +24,14 @@ public abstract class BaseMultilItemAdapter<T> {
         this.mMainAdapter = mainAdapter;
     }
 
-    public abstract int getItemCount();
+    public int getItemCount() {
+        return data.size();
+    }
 
-    protected abstract void onBindViewHolder(BaseLayoutAdapter.ViewHolder viewHolder, final int position);
+    protected abstract void onBindViewHolder(@NonNull BaseLayoutAdapter.ViewHolder viewHolder, final int position);
 
 
-    public BaseLayoutAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseLayoutAdapter.ViewHolder onCreateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(getItemLayoutIds(), parent, false);
         return new BaseLayoutAdapter.ViewHolder(view, this);
     }

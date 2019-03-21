@@ -38,8 +38,9 @@ public class RecyclerViewAdapterFactory {
             return this;
         }
 
-        public Builder setDefaultFooter(String loadingMessage, boolean showImmediately) {
+        public Builder setDefaultFooter(String loadingMessage, boolean showImmediately, View.OnClickListener errorListener) {
             DefaultFooterAdapterBase adapter = new DefaultFooterAdapterBase();
+            adapter.setOnErrorClickLister(errorListener);
             adapter.setMessage(loadingMessage, null, DefaultFooterAdapterBase.LOADING);
             setFooterAdapter(adapter, showImmediately);
             return this;
@@ -67,7 +68,7 @@ public class RecyclerViewAdapterFactory {
             if (params.showFooterImmediately && params.footerAdapter != null) {
                 params.adapters.add(params.footerAdapter);
             }
-            adapter.setMuliItems(params.adapters);
+            adapter.setMultiItems(params.adapters);
             if (params.recyclerView != null) {
                 if (params.manager == null) {
                     params.manager = new LinearLayoutManager(params.mContext);
@@ -125,24 +126,16 @@ public class RecyclerViewAdapterFactory {
     }
 
 
-    public static class DefaultFooterAdapterBase extends BaseMultilItemAdapter<String> {
-        public final static int LOADING = 0;
-        public final static int COMPLETE = 1;
-        public final static int ERROR = 2;
+    public static class DefaultFooterAdapterBase extends BaseFooterAdapter {
+
         private String message;
         private Drawable drawable;
         private int state = LOADING;
+        private View.OnClickListener onErrorClickLister;
 
         public DefaultFooterAdapterBase() {
 
         }
-
-
-        @Override
-        public int getItemCount() {
-            return 1;
-        }
-
 
         @Override
         public void onBindViewHolder(BaseLayoutAdapter.ViewHolder viewHolder, int position) {
@@ -163,12 +156,7 @@ public class RecyclerViewAdapterFactory {
                 loadingBar.setVisibility(View.GONE);
                 iv.setImageDrawable(drawable);
                 iv.setVisibility(View.VISIBLE);
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
+                viewHolder.itemView.setOnClickListener(onErrorClickLister);
             }
 
         }
@@ -187,6 +175,16 @@ public class RecyclerViewAdapterFactory {
         @Override
         public int getItemMatchType() {
             return BaseMultilItemAdapter.MATCH;
+        }
+
+        @Override
+        public void setMessage(String message, int state) {
+            this.state = state;
+            this.message = message;
+        }
+
+        public void setOnErrorClickLister(View.OnClickListener onErrorClickLister) {
+            this.onErrorClickLister = onErrorClickLister;
         }
     }
 
