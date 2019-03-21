@@ -26,7 +26,7 @@ public abstract class BaseMultilItemAdapter<T> {
 
     public abstract int getItemCount();
 
-    abstract void onBindViewHolder(BaseLayoutAdapter.ViewHolder viewHolder, final int position);
+    protected abstract void onBindViewHolder(BaseLayoutAdapter.ViewHolder viewHolder, final int position);
 
 
     public BaseLayoutAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
